@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Аудиоконвертер</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#120d1a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>
 :root{--bg:#120d1a;--card:#1c1428;--text:#f3ecff;--muted:#a898c2;--accent:#c58bff;--accent2:#8a5cf0;--on:#1a0f2a;--line:color-mix(in srgb,var(--text) 14%,transparent);--soft:color-mix(in srgb,var(--accent) 16%,transparent);--ok:#3ccf8e;--err:#ff7a66;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -154,6 +160,7 @@ audio{flex:1 0 100%;height:36px}
 </div>
 <div id="list"></div>
 <div class="feat"><span>🔒 Без загрузки на сервер</span><span>⚡ Пакетная обработка</span><span>🎧 Прослушивание на месте</span></div>
+<div style="text-align:center;margin-top:20px"><button id="install" class="g" style="display:none;padding:11px 20px">⬇ Установить приложение</button><p class="hint" id="ihint" style="display:none;margin:12px auto 0;max-width:420px"></p></div>
 </main>
 <div id="ov" hidden><div class="sheet">
 <div class="shead"><b>Настройки</b><button id="x" class="g" aria-label="Закрыть">✕</button></div>
@@ -428,6 +435,22 @@ function lgScan(){
 }
 new MutationObserver(lgScan).observe($('list'),{childList:true});
 $('refOn').onchange=e=>{S.refract=e.target.checked;persist();apply()};
+
+/* ===== Установка как приложение (PWA) ===== */
+let dPrompt=null;
+const standalone=mq('(display-mode: standalone)')||navigator.standalone;
+if(!standalone)$('install').style.display='';
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();dPrompt=e});
+addEventListener('appinstalled',()=>{$('install').style.display='none';$('ihint').style.display='none'});
+$('install').onclick=async()=>{
+  const h=$('ihint');
+  if(dPrompt){dPrompt.prompt();try{await dPrompt.userChoice}catch(e){}dPrompt=null;return}
+  h.textContent=/Android/i.test(navigator.userAgent)
+    ?'Откройте меню браузера ⋮ и выберите «Установить приложение» (или «Добавить на главный экран»).'
+    :'В Chrome нажмите значок установки в адресной строке или меню ⋮ → «Установить Аудиоконвертер». В Edge: меню ⋯ → «Приложения» → «Установить этот сайт как приложение».';
+  h.style.display='block';
+};
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 apply();snow();
 </script>
 </body>
