@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>MP3 → OGG конвертер</title>
+<title>Аудиоконвертер</title>
 <style>
 :root{--bg:#120d1a;--card:#1c1428;--text:#f3ecff;--muted:#a898c2;--accent:#c58bff;--accent2:#8a5cf0;--on:#1a0f2a;--line:color-mix(in srgb,var(--text) 14%,transparent);--soft:color-mix(in srgb,var(--accent) 16%,transparent);--ok:#3ccf8e;--err:#ff7a66;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background-color:var(--bg);background-image:var(--dots,none),radial-gradient(60% 45% at 12% 0,color-mix(in srgb,var(--accent) 28%,transparent),transparent),radial-gradient(55% 45% at 95% 100%,color-mix(in srgb,var(--accent2) 26%,transparent),transparent);background-size:22px 22px,auto,auto;background-attachment:fixed;transition:background .3s}
+body{margin:0;min-height:100vh;color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background-color:var(--bg);background-image:var(--dots,none),radial-gradient(60% 45% at 12% 0,color-mix(in srgb,var(--accent) 28%,transparent),transparent),radial-gradient(55% 45% at 95% 100%,color-mix(in srgb,var(--accent2) 26%,transparent),transparent);background-size:22px 22px,auto,auto;background-attachment:fixed}
 .g{background:var(--card);border:1px solid var(--line)}
 [data-glass=blur] .g{background:color-mix(in srgb,var(--card) 60%,transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
 [data-glass=liquid]{--dots:radial-gradient(circle,color-mix(in srgb,var(--text) 14%,transparent) 1.3px,transparent 1.8px)}
@@ -22,7 +22,7 @@ main{max-width:620px;margin:0 auto;padding:44px 18px 56px}
 h1{font-size:clamp(28px,6vw,38px);line-height:1.15;margin:0 0 8px;text-align:center;letter-spacing:-.02em}
 .sub{color:var(--muted);margin:0 0 28px;text-align:center}
 .card{border-radius:22px;padding:18px}
-.drop{display:block;border:2px dashed var(--line);border-radius:16px;background:var(--soft);padding:34px 16px;text-align:center;cursor:pointer;transition:all .15s}
+.drop{display:block;border:2px dashed var(--line);border-radius:16px;background:var(--soft);padding:34px 16px;text-align:center;cursor:pointer;transition:all .5s var(--ease)}
 .drop:hover,.drop.over{border-color:var(--accent);transform:translateY(-1px)}
 .drop svg{width:44px;height:44px;color:var(--accent);margin-bottom:6px}
 .drop b{display:block;font-size:17px}
@@ -32,12 +32,12 @@ input[type=file]{display:none}
 .seg{display:flex;gap:6px;flex-wrap:wrap}
 .seg label{flex:1 1 90px;cursor:pointer}
 .seg input{position:absolute;opacity:0;pointer-events:none}
-.seg span{display:block;text-align:center;padding:10px 6px;border-radius:12px;border:1px solid var(--line);font-size:14px;font-weight:500;transition:all .12s}
+.seg span{display:block;text-align:center;padding:10px 6px;border-radius:12px;border:1px solid var(--line);font-size:14px;font-weight:500;transition:all .4s var(--ease)}
 .seg span small{display:block;color:var(--muted);font-size:11px;font-weight:400}
 .seg input:checked+span{border-color:var(--accent);background:var(--soft);box-shadow:0 0 0 1px var(--accent);color:var(--accent)}
 .seg input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
 .actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
-button{font:inherit;color:var(--text);background:transparent;border-radius:14px;border:1px solid var(--line);padding:13px 18px;font-weight:600;cursor:pointer;transition:all .12s}
+button{font:inherit;color:var(--text);background:transparent;border-radius:14px;border:1px solid var(--line);padding:13px 18px;font-weight:600;cursor:pointer;transition:all .4s var(--ease)}
 .actions button{flex:1 1 160px}
 button.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--on);border:0;box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 40%,transparent)}
 button.primary:hover:not(:disabled){transform:translateY(-1px)}
@@ -53,7 +53,7 @@ button:disabled{opacity:.45;cursor:default;box-shadow:none}
 .st.ok{background:color-mix(in srgb,var(--ok) 20%,transparent);color:var(--ok)}
 .st.err{background:color-mix(in srgb,var(--err) 20%,transparent);color:var(--err)}
 .bar{height:4px;background:var(--line);border-radius:2px;margin-top:6px;overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .1s}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .45s ease-out}
 audio{flex:1 0 100%;height:36px}
 .dl{font-size:13px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap}
 .dl:hover{text-decoration:underline}
@@ -82,34 +82,70 @@ audio{flex:1 0 100%;height:36px}
 .hint{font-size:13px;color:var(--muted);font-weight:400}
 .sw{position:relative;flex:none;width:52px;height:30px}
 .sw input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer;z-index:1}
-.sw i{position:absolute;inset:0;border-radius:99px;background:var(--line);transition:background .15s}
-.sw i::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--text);transition:transform .15s}
+.sw i{position:absolute;inset:0;border-radius:99px;background:var(--line);transition:background .45s var(--ease)}
+.sw i::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--text);transition:transform .5s var(--ease)}
 .sw input:checked+i{background:var(--accent)}
 .sw input:checked+i::after{transform:translateX(22px);background:var(--on)}
 #reset{width:100%;margin-top:4px}
+@property --bg{syntax:'<color>';inherits:true;initial-value:#120d1a}
+@property --card{syntax:'<color>';inherits:true;initial-value:#1c1428}
+@property --text{syntax:'<color>';inherits:true;initial-value:#f3ecff}
+@property --muted{syntax:'<color>';inherits:true;initial-value:#a898c2}
+@property --accent{syntax:'<color>';inherits:true;initial-value:#c58bff}
+@property --accent2{syntax:'<color>';inherits:true;initial-value:#8a5cf0}
+@property --on{syntax:'<color>';inherits:true;initial-value:#1a0f2a}
+:root{--ease:cubic-bezier(.22,1,.36,1);transition:--bg .8s var(--ease),--card .8s var(--ease),--text .8s var(--ease),--muted .8s var(--ease),--accent .8s var(--ease),--accent2 .8s var(--ease),--on .8s var(--ease)}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(9vw,7vh) scale(1.18)}}
+@keyframes fade{from{opacity:0}}
+@keyframes rise{from{opacity:0;transform:translateY(30px) scale(.97)}}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98)}}
+.orbs{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.orbs i{position:absolute;width:46vmax;height:46vmax;border-radius:50%;background:radial-gradient(circle,var(--accent),transparent 68%);opacity:.34;animation:drift 36s ease-in-out infinite alternate}
+.orbs i:nth-child(1){left:-12vmax;top:-10vmax}
+.orbs i:nth-child(2){right:-14vmax;top:30vh;background:radial-gradient(circle,var(--accent2),transparent 68%);animation-duration:44s;animation-direction:alternate-reverse}
+.orbs i:nth-child(3){left:20vw;bottom:-22vmax;animation-duration:52s}
+#ov:not([hidden]){animation:fade .5s ease}
+#ov:not([hidden]) .sheet{animation:rise .7s var(--ease)}
+#ov.closing{animation:fade .4s ease reverse forwards}
+#ov.closing .sheet{transition:transform .4s ease;transform:translateY(26px)}
+.item{animation:pop .65s var(--ease) both}
+.noanim *,.noanim *::before,.noanim *::after{transition:none!important;animation:none!important}
+[data-anim=off]{transition:none!important}
+.opts{flex-wrap:wrap}.opts button{flex:1 1 28%}
+[data-glass=frost] .g{background:color-mix(in srgb,var(--card) 48%,transparent);-webkit-backdrop-filter:blur(28px) saturate(140%);backdrop-filter:blur(28px) saturate(140%);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 8px 26px rgba(0,0,0,.2)}
+[data-glass=liquid] .g:not(.gear){position:relative}
+[data-glass=liquid] .g::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;background:conic-gradient(from 200deg,rgba(255,255,255,.95),rgba(255,255,255,.08) 22%,rgba(255,255,255,.5) 48%,rgba(255,255,255,.08) 72%,rgba(255,255,255,.95));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
 </style>
 </head>
 <body>
+<div class="orbs"><i></i><i></i><i></i></div>
 <button class="gear g" id="gear" aria-label="Настройки">⚙</button>
 <main>
-<div class="logo"><span class="fmt">MP3</span><span class="arrow">→</span><span class="fmt to">OGG</span></div>
-<h1>Конвертер MP3 в OGG</h1>
+<div class="logo"><span class="fmt">AUDIO</span><span class="arrow">→</span><span class="fmt to" id="toFmt">OGG</span></div>
+<h1>Аудиоконвертер</h1>
 <p class="sub">Быстро, бесплатно и приватно: файлы не покидают ваш браузер.</p>
 <div id="warn">Ваш браузер не поддерживает WebCodecs (AudioEncoder). Откройте страницу в свежем Chrome, Edge, Safari или Firefox.</div>
 <div class="card g">
 <label class="drop" id="drop">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
-<b>Выберите MP3-файлы или перетащите сюда</b>
-<span>можно сразу несколько</span>
-<input type="file" id="file" accept=".mp3,audio/mpeg" multiple>
+<b>Выберите аудиофайлы или перетащите сюда</b>
+<span>MP3, WAV, FLAC, M4A, AAC, OGG, OPUS, WebM · можно сразу несколько</span>
+<input type="file" id="file" accept="audio/*,.mp3,.wav,.flac,.ogg,.oga,.opus,.m4a,.aac,.webm,.weba,.mp4" multiple>
 </label>
-<div class="lbl">Качество</div>
+<div class="lbl">Формат результата</div>
+<div class="seg" id="fmtSeg">
+<label><input type="radio" name="fmt" value="ogg" checked><span>OGG<small>Opus</small></span></label>
+<label><input type="radio" name="fmt" value="opus"><span>OPUS<small>.opus</small></span></label>
+<label><input type="radio" name="fmt" value="wav"><span>WAV<small>без сжатия</small></span></label>
+</div>
+<div id="qrow"><div class="lbl">Качество</div>
 <div class="seg">
 <label><input type="radio" name="kbps" value="64"><span>64<small>компактно</small></span></label>
 <label><input type="radio" name="kbps" value="96"><span>96<small>речь</small></span></label>
 <label><input type="radio" name="kbps" value="128" checked><span>128<small>оптимально</small></span></label>
 <label><input type="radio" name="kbps" value="192"><span>192<small>высокое</small></span></label>
 <label><input type="radio" name="kbps" value="256"><span>256<small>максимум</small></span></label>
+</div>
 </div>
 <div class="actions">
 <button class="primary" id="go" disabled>Конвертировать</button>
@@ -131,17 +167,17 @@ audio{flex:1 0 100%;height:36px}
 const $=id=>document.getElementById(id);
 let queue=[],done=[],busy=false;
 
-if(!('AudioEncoder' in window)){$('warn').style.display='block';}
+if(!('AudioEncoder' in window)){$('warn').style.display='block';$('warn').textContent='В этом браузере нет кодека Opus (WebCodecs): доступен только WAV. Для OGG откройте страницу в свежем Chrome, Edge или Safari.';}
 
 function addFiles(fl){
-  queue=[...fl].filter(f=>/\.mp3$/i.test(f.name)||f.type==='audio/mpeg');
+  queue=[...fl].filter(f=>/\.(mp3|wav|wave|flac|ogg|oga|opus|m4a|aac|webm|weba|mp4)$/i.test(f.name)||/^audio\//.test(f.type));
   done=[];$('list').textContent='';$('save').style.display='none';
   queue.forEach(f=>{
     const d=document.createElement('div');d.className='item g';
     d.innerHTML='<div class="ic">♪</div><div class="mid"><div class="name"></div><div class="meta"></div><div class="bar"><i></i></div></div><span class="st">ожидает</span>';
     d.querySelector('.name').textContent=f.name;d.querySelector('.meta').textContent=(f.size/1048576).toFixed(2)+' МБ';f.el=d;$('list').appendChild(d);
   });
-  $('go').disabled=!queue.length||!('AudioEncoder' in window);
+  $('go').disabled=!queue.length;
 }
 $('file').onchange=e=>addFiles(e.target.files);
 const drop=$('drop');
@@ -191,6 +227,8 @@ async function toOgg(file,kbps,prog){
   const ctx=new(window.AudioContext||window.webkitAudioContext)();
   let dec;try{dec=await ctx.decodeAudioData(raw)}finally{ctx.close()}
   const ch=Math.min(2,dec.numberOfChannels);
+  if(document.querySelector('input[name=fmt]:checked').value==='wav'){prog(1);return wavBlob(dec,ch)}
+  if(!('AudioEncoder' in window))throw new Error('noenc');
   const off=new OfflineAudioContext(ch,Math.ceil(dec.duration*48000),48000);
   const s=off.createBufferSource();s.buffer=dec;s.connect(off.destination);s.start();
   const pcm=await off.startRendering();
@@ -215,6 +253,15 @@ async function toOgg(file,kbps,prog){
   return mux(packets,ch,total);
 }
 
+function wavBlob(dec,ch){
+  const n=dec.length,sr=dec.sampleRate,buf=new ArrayBuffer(44+n*ch*2),v=new DataView(buf);
+  const w=(o,t)=>{for(let i=0;i<t.length;i++)v.setUint8(o+i,t.charCodeAt(i))};
+  w(0,'RIFF');v.setUint32(4,36+n*ch*2,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,ch,true);
+  v.setUint32(24,sr,true);v.setUint32(28,sr*ch*2,true);v.setUint16(32,ch*2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*ch*2,true);
+  const cs=[];for(let c=0;c<ch;c++)cs.push(dec.getChannelData(c));
+  let o=44;for(let i=0;i<n;i++)for(let c=0;c<ch;c++){const x=Math.max(-1,Math.min(1,cs[c][i]));v.setInt16(o,x<0?x*32768:x*32767,true);o+=2}
+  return new Blob([buf],{type:'audio/wav'});
+}
 function makeZip(entries){
   const te=new TextEncoder(),locals=[],centrals=[];let offset=0;
   for(const e of entries){
@@ -237,18 +284,18 @@ function makeZip(entries){
 
 $('go').onclick=async()=>{
   if(busy)return;busy=true;$('go').disabled=true;done=[];$('save').style.display='none';
-  const kbps=+document.querySelector('input[name=kbps]:checked').value;
+  const kbps=+document.querySelector('input[name=kbps]:checked').value,fv=document.querySelector('input[name=fmt]:checked').value,ext=fv==='wav'?'wav':fv==='opus'?'opus':'ogg';
   for(const f of queue){
-    const st=f.el.querySelector('.st'),bar=f.el.querySelector('.bar i');
+    const st=f.el.querySelector('.st'),bar=f.el.querySelector('.bar i');f.el.querySelectorAll('.dl,audio').forEach(n=>n.remove());bar.style.width='0';
     try{
       st.className='st';st.textContent='конвертация…';
       const blob=await toOgg(f,kbps,p=>{bar.style.width=Math.round(p*100)+'%';st.textContent=Math.round(p*100)+'%'});
       const ogg=new Uint8Array(await blob.arrayBuffer());
-      done.push({name:f.name.replace(/\.mp3$/i,'')+'.ogg',data:ogg});
+      done.push({name:f.name.replace(/\.[^.]+$/,'')+'.'+ext,data:ogg});
       st.className='st ok';st.textContent='готово · '+(ogg.length/1048576).toFixed(2)+' МБ';
-      try{const u=URL.createObjectURL(blob),l=document.createElement('a');l.className='dl';l.href=u;l.download=f.name.replace(/\.mp3$/i,'')+'.ogg';l.textContent='Скачать .ogg';f.el.querySelector('.st').after(l);const a=document.createElement('audio');a.controls=true;a.src=u;f.el.appendChild(a)}catch(e){}
+      try{const u=URL.createObjectURL(blob),l=document.createElement('a');l.className='dl';l.href=u;l.download=f.name.replace(/\.[^.]+$/,'')+'.'+ext;l.textContent='Скачать .'+ext;f.el.querySelector('.st').after(l);const a=document.createElement('audio');a.controls=true;a.src=u;f.el.appendChild(a)}catch(e){}
     }catch(e){
-      st.className='st err';st.textContent='ошибка: не удалось декодировать или закодировать';
+      st.className='st err';st.textContent=e&&e.message==='noenc'?'нет кодека Opus: выберите WAV':'ошибка: формат не читается браузером';
     }
   }
   busy=false;$('go').disabled=false;
@@ -299,7 +346,7 @@ function apply(){
   ['bg','card','text','muted','accent','accent2','on'].forEach((k,i)=>r.style.setProperty('--'+k,t[i+1]));
   r.style.colorScheme=S.theme==='light'?'light':'dark';
   r.dataset.glass=S.glass;
-  document.body.classList.toggle('noanim',!S.anim);
+  document.body.classList.toggle('noanim',!S.anim);r.dataset.anim=S.anim?'on':'off';
   document.querySelectorAll('#themes button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.theme));
   document.querySelectorAll('.opts').forEach(o=>o.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===String(S[o.dataset.k]))));
   $('snowOn').checked=S.snow;$('animOn').checked=S.anim;
@@ -314,12 +361,12 @@ Object.entries(THEMES).forEach(([id,t])=>{
   b.innerHTML='<i style="background:linear-gradient(135deg,'+t[2]+' 50%,'+t[5]+' 50%)"></i><span>'+t[0]+'</span>';
   b.onclick=()=>{S.theme=id;persist();apply();if(S.snow)snow()};$('themes').appendChild(b);
 });
-opts('glassO','glass',[['none','Без размытия'],['blur','Размытие'],['liquid','Liquid Glass']]);
+opts('glassO','glass',[['none','Без размытия'],['blur','Размытие'],['frost','Матовое'],['liquid','Liquid Glass']]);
 opts('snowO','snowAmt',[['low','Мало'],['mid','Средне'],['high','Много']]);
 $('snowOn').onchange=e=>{S.snow=e.target.checked;persist();apply();snow()};
 $('animOn').onchange=e=>{S.anim=e.target.checked;persist();apply()};
 $('reset').onclick=()=>{S={...DEF};persist();apply();snow()};
-const ov=$('ov'),openS=()=>{ov.hidden=false},closeS=()=>{ov.hidden=true};
+const ov=$('ov'),openS=()=>{ov.classList.remove('closing');ov.hidden=false},closeS=()=>{if(ov.hidden||ov.classList.contains('closing'))return;ov.classList.add('closing');setTimeout(()=>{ov.hidden=true;ov.classList.remove('closing')},S.anim?400:0)};
 $('gear').onclick=openS;$('x').onclick=closeS;
 ov.addEventListener('click',e=>{if(e.target===ov)closeS()});
 addEventListener('keydown',e=>{if(e.key==='Escape')closeS()});
@@ -327,7 +374,7 @@ addEventListener('resize',()=>{if(S.snow)snow()});
 
 /* ===== Liquid Glass: преломление краёв (SVG feDisplacementMap + backdrop-filter, только Chromium) ===== */
 const CHR=/Chrome\//.test(navigator.userAgent);
-const NS='http://www.w3.org/2000/svg',SC=26;
+const NS='http://www.w3.org/2000/svg',SC=46;
 const svgRoot=document.createElementNS(NS,'svg');svgRoot.setAttribute('width','0');svgRoot.setAttribute('height','0');svgRoot.style.cssText='position:absolute;pointer-events:none';
 const defs=document.createElementNS(NS,'defs');svgRoot.appendChild(defs);document.body.appendChild(svgRoot);
 const LG=new Map();let lgN=0;
@@ -341,11 +388,13 @@ function dispMap(w,h,r,b){
     let nx=0,ny=0;
     if(qx>0&&qy>0){nx=Math.sign(px)*ox/len;ny=Math.sign(py)*oy/len}
     else if(qx>qy)nx=Math.sign(px);else ny=Math.sign(py);
-    const t=(dep<0||dep>=b)?0:Math.pow(1-dep/b,2),i=(y*w+x)*4;
+    const t=(dep<0||dep>=b)?0:Math.pow(1-dep/b,1.6),i=(y*w+x)*4;
     d[i]=128-127*nx*t;d[i+1]=128-127*ny*t;d[i+2]=128;d[i+3]=255;
   }
   g.putImageData(im,0,0);return c.toDataURL();
 }
+function fmtUpd(){const v=document.querySelector('input[name=fmt]:checked').value;$('qrow').style.display=v==='wav'?'none':'';$('toFmt').textContent=v.toUpperCase()}
+document.querySelectorAll('input[name=fmt]').forEach(i=>i.onchange=fmtUpd);
 function lgBuild(el){
   const rec=LG.get(el);if(!rec)return;
   const w=Math.round(el.offsetWidth),h=Math.round(el.offsetHeight);
@@ -353,10 +402,10 @@ function lgBuild(el){
   rec.w=w;rec.h=h;
   const cs=getComputedStyle(el).borderTopLeftRadius;
   let r=cs.includes('%')?Math.min(w,h)/2:(parseFloat(cs)||0);r=Math.min(r,w/2,h/2);
-  const b=Math.max(4,Math.min(22,Math.min(w,h)/2.2));
+  const b=Math.max(6,Math.min(34,Math.min(w,h)/1.9));
   rec.f.setAttribute('x','0');rec.f.setAttribute('y','0');rec.f.setAttribute('width',w);rec.f.setAttribute('height',h);
   rec.f.innerHTML='<feImage href="'+dispMap(w,h,r,b)+'" x="0" y="0" width="'+w+'" height="'+h+'" preserveAspectRatio="none" result="m"/><feDisplacementMap in="SourceGraphic" in2="m" scale="'+SC+'" xChannelSelector="R" yChannelSelector="G"/>';
-  const v='url(#'+rec.id+') blur(2px) saturate(170%)';
+  const v='url(#'+rec.id+') blur(1px) saturate(180%) brightness(1.1)';
   el.style.backdropFilter=v;el.style.webkitBackdropFilter=v;
 }
 const RO=new ResizeObserver(es=>es.forEach(e=>lgBuild(e.target)));
